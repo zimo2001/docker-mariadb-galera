@@ -3,6 +3,9 @@ FROM	phusion/baseimage
 # Set correct environment variables.
 ENV HOME /root
 
+# WORKAROUND for docker build errors
+RUN ln -s -f /bin/true /usr/bin/chfn
+
 # Install MariaDB
 RUN	apt-get -y update
 RUN apt-get install -y software-properties-common
