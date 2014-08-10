@@ -3,7 +3,7 @@ MariaDB 10.0 Galera
 
 A reasonably simple Ubuntu 14.04 LTS (phusion/baseimage) container with the pieces to form
 a MariaDB 10.0 Galera cluster. It's based on Nick Stenning's container
-for MariaDB 10.0, and adds in default support for X.509 based
+for MariaDB 5.5, and adds in default support for X.509 based
 administrative authentication.
 
 (Repeating the warning from Nick S)
