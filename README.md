@@ -1,6 +1,8 @@
 MariaDB 10.0 Galera
 ==================
 
+Based on (nsasikumar/mariadb55-galera)
+
 A reasonably simple Ubuntu 14.04 LTS (phusion/baseimage) container with the pieces to form
 a MariaDB 10.0 Galera cluster. It's based on Nick Stenning's container
 for MariaDB 5.5, and adds in default support for X.509 based
