@@ -99,9 +99,11 @@ first node standup, /data/mysql should be empty.
 
 # Boot the first node in standalone mode #
 
+```bash
 DBID=$(sudo docker run -d -v /var/docker/maria01/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria01/ssl:/etc/ssl/mysql -e CLUSTER=BOOT inspirationlabs/mariadb-10.0-galera)
 DBID=$(sudo docker run -d -v /var/docker/maria02/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria02/ssl:/etc/ssl/mysql -e CLUSTER=BOOT inspirationlabs/mariadb-10.0-galera)
 DBID=$(sudo docker run -d -v /var/docker/maria03/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria03/ssl:/etc/ssl/mysql -e CLUSTER=BOOT inspirationlabs/mariadb-10.0-galera)
+```
 
 (Note: no need to expose ports 4567 and 4444 - no-one is talking to
 anyone just yet)
@@ -123,7 +125,9 @@ This should (gracefully) stop the standalone mode MariaDB node
 
 To begin the cluster, you need a single node as a catch-all donor.
 
+```bash
 DBID=$(sudo docker run -d -v /var/docker/maria01/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria01/ssl:/etc/ssl/mysql -p 3306:3306 -p 4567:4567 -p 4444:4444 -e CLUSTER=INIT inspirationlabs/mariadb-10.0-galera)
+```
 
 This should restart the server (with data intact) with the ability to
 use it to populate new nodes to fill out the cluster. Node that the
@@ -143,11 +147,11 @@ nodes are coming online.
 For each extra node that you need to turn up, set up the `/data/mysql`
 and `/data/mysql-ssl` directories as per the primary node, and execute
 
-
+```bash
 DBID=$(sudo docker run -d -v /var/docker/maria02/mysql:/var/lib/mysql \
        -v /var/docker/maria02/ssl:/etc/ssl/mysql \
        -e CLUSTER= my.host.name,his.host.name,her.host.name \
-       p 3306:3306 -p 4567:4567 -p 4444:4444 \
+       -p 3306:3306 -p 4567:4567 -p 4444:4444 \
        -e NODE=2\
        -e NODE_ADDR=my.host.name \
        inspirationlabs/mariadb-10.0-galera)
@@ -155,10 +159,11 @@ DBID=$(sudo docker run -d -v /var/docker/maria02/mysql:/var/lib/mysql \
 DBID=$(sudo docker run -d -v /var/docker/maria03/mysql:/var/lib/mysql \
       -v /var/docker/maria03/ssl:/etc/ssl/mysql \
       -e CLUSTER= my.host.name,his.host.name,her.host.name \
-      p 3306:3306 -p 4567:4567 -p 4444:4444 \
+      -p 3306:3306 -p 4567:4567 -p 4444:4444 \
       -e NODE=2\
       -e NODE_ADDR=my.host.name \
       inspirationlabs/mariadb-10.0-galera)
+```
 
 where `<node number>` is some integer above 1, ideally sequential. The
 `his.host.name`, `her.host.name` etc. should be the other nodes in the
@@ -181,6 +186,7 @@ cluster.
 
 sudo docker stop $DBID
 
+```bash
 DBID=$(sudo docker run -d /data/mysql:/var/lib/mysql \
        -v /data/mysql-ssl:/etc/ssl/mysql \
        -p 3306:3306 -p 4567:4567 -p 4444:4444 \
@@ -188,29 +194,37 @@ DBID=$(sudo docker run -d /data/mysql:/var/lib/mysql \
        -e NODE=1 \
        -e NODE_ADDR=my.host.name inspirationlabs/mariadb-10.0-galera \
        mariadb-start)
+```
 
 # Generating SSL certificates
 
 1. Generate private key for the CA
-openssl genrsa 2048 > ca-key.pem
+
+	`openssl genrsa 2048 > ca-key.pem`
 
 2. Generate CA
-openssl req -new -x509 -nodes -days 3600 -key ca-key.pem -out ca.pem
+
+	`openssl req -new -x509 -nodes -days 3600 -key ca-key.pem -out ca.pem`
 
 3. Create server certificate key and request
-openssl req -newkey rsa:2048 -days 3600 -nodes -keyout server-key.pem -out server-req.pem
+
+	`openssl req -newkey rsa:2048 -days 3600 -nodes -keyout server-key.pem -out server-req.pem`
 
 4. Sign server key
-openssl x509 -req -in server-req.pem -days 3600 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
+
+	`openssl x509 -req -in server-req.pem -days 3600 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem`
 
 5. Create client certificate key and request
-openssl req -newkey rsa:2048 -days 3600 -nodes -keyout client-key.pem -out client-req.pem
+
+	`openssl req -newkey rsa:2048 -days 3600 -nodes -keyout client-key.pem -out client-req.pem`
 
 6. Sign client key
-openssl x509 -req -in client-req.pem -days 3600 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem
+
+	`openssl x509 -req -in client-req.pem -days 3600 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem`
 
 7. Verify certificates
-openssl verify -CAfile ca.pem server-cert.pem client-cert.pem
+
+	`openssl verify -CAfile ca.pem server-cert.pem client-cert.pem`
 
 [^1]: http://tinyca.sm-zone.net
 
