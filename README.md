@@ -101,8 +101,6 @@ first node standup, /data/mysql should be empty.
 
 ```bash
 DBID=$(sudo docker run -d -v /var/docker/maria01/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria01/ssl:/etc/ssl/mysql -e CLUSTER=BOOT inspirationlabs/mariadb-10.0-galera)
-DBID=$(sudo docker run -d -v /var/docker/maria02/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria02/ssl:/etc/ssl/mysql -e CLUSTER=BOOT inspirationlabs/mariadb-10.0-galera)
-DBID=$(sudo docker run -d -v /var/docker/maria03/mysql:/var/lib/mysql -e NODE_ADDR=my.host.name -v /var/docker/maria03/ssl:/etc/ssl/mysql -e CLUSTER=BOOT inspirationlabs/mariadb-10.0-galera)
 ```
 
 (Note: no need to expose ports 4567 and 4444 - no-one is talking to
