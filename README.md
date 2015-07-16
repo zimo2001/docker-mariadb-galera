@@ -158,7 +158,7 @@ DBID=$(sudo docker run -d -v /var/docker/maria03/mysql:/var/lib/mysql \
       -v /var/docker/maria03/ssl:/etc/ssl/mysql \
       -e CLUSTER= my.host.name,his.host.name,her.host.name \
       -p 3306:3306 -p 4567:4567 -p 4444:4444 \
-      -e NODE=2\
+      -e NODE=3\
       -e NODE_ADDR=my.host.name \
       inspirationlabs/mariadb-10.0-galera)
 ```
