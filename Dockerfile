@@ -1,3 +1,5 @@
+## Motti's Dockerfile optimized for walla
+
 FROM	phusion/baseimage
 
 # Set correct environment variables.
